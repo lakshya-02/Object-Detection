@@ -25,34 +25,27 @@ public sealed class OllamaWorkspaceOrganizer : MonoBehaviour
     private const string SceneJsonPlaceholder = "{SCENE_JSON_HERE}";
     private const string GoalPlaceholder = "{USER_GOAL_HERE}";
     private const string DefaultPromptTemplate =
-        "You are a practical room and workspace arrangement assistant for an AR object-detection app.\n\n" +
-        "You will receive detected scene data in JSON. The only allowed object names are the values of objects[].name.\n" +
-        "Every object noun in your answer must be copied from objects[].name. Do not invent or add any other object names.\n" +
-        "If an object is not in objects[].name, do not mention it.\n" +
-        "Use only the detected zones from the JSON. If the zone is generic, such as camera view, do not claim left, right, front, back, floor, table, shelf, or desk.\n" +
-        "Do not mention any location that is not present in zones[].\n\n" +
-        "Decision rules:\n" +
-        "- Give physical placement advice using only the detected object names.\n" +
-        "- If multiple detected objects have the same name, group or stack that detected name together.\n" +
-        "- If a detected object name contains cup, mug, bottle, or glass, move that exact detected object away from fragile or electronic detected objects.\n" +
-        "- If a detected object name contains chair, stool, or seat, align or tuck in that exact detected object.\n" +
-        "- If a detected object name contains mat or pad, flatten or align that exact detected object.\n" +
-        "- If the scene is already tidy, say what detected object to keep as-is.\n" +
-        "- Return 2 to 3 useful steps only.\n" +
-        "- Each step must be short: maximum 12 words.\n" +
-        "- The app displays only the steps array, so put every important instruction there.\n" +
-        "- Do not repeat the same action in both steps and speak.\n" +
-        "- Make speak one very short sentence, maximum 20 words.\n" +
-        "- If the objects array is empty, do not give room-cleaning advice and do not mention clutter or obstacles.\n" +
-        "- If the objects array is empty, steps must only say that no detected objects are available yet.\n" +
-        "- Avoid generic advice like only saying clean the area.\n\n" +
+        "You are a precise mixed-reality workspace organization assistant.\n\n" +
+        "You will receive detected scene data in JSON. Use only object names from objects[].name.\n" +
+        "Do not invent missing objects, furniture, drawers, shelves, storage boxes, or tools.\n" +
+        "Use each object's box, horizontalPosition, verticalPosition, and zone to create concrete placement instructions.\n" +
+        "Prefer relative instructions such as: place laptop left of keyboard, move bottle to the right edge, stack book on notebook, align mouse beside keyboard.\n" +
+        "Only use a relative instruction when both named objects are detected. Otherwise use a detected zone like left, center, right, top, or bottom.\n" +
+        "If drinks are detected, place them away from electronics such as laptop, keyboard, monitor, phone, or mouse.\n" +
+        "If papers, notebooks, or books are detected, stack or align them together.\n" +
+        "If the user goal mentions cleaning or clutter, reduce clutter by grouping similar detected objects and clearing the center work area.\n" +
+        "Return 3 to 5 practical steps. Each step should name the object and the exact target location.\n" +
+        "The speak field should be 2 to 4 natural sentences with the same specific object placement advice.\n" +
+        "If no objects are detected, say that no detected objects are available yet and ask the user to look at the workspace.\n\n" +
+        "User goal:\n" +
+        GoalPlaceholder + "\n\n" +
         "Scene JSON:\n" +
         SceneJsonPlaceholder + "\n\n" +
         "Return valid JSON only, exactly in this shape:\n" +
         "{\n" +
-        "  \"summary\": \"very short plan\",\n" +
-        "  \"steps\": [\"short action 1\", \"short action 2\", \"short action 3\"],\n" +
-        "  \"speak\": \"one short instruction sentence\"\n" +
+        "  \"summary\": \"specific organization plan\",\n" +
+        "  \"steps\": [\"specific object placement step 1\", \"specific object placement step 2\", \"specific object placement step 3\"],\n" +
+        "  \"speak\": \"natural spoken guidance with specific object placements\"\n" +
         "}";
 
     [Header("Ollama")]
@@ -247,9 +240,7 @@ public sealed class OllamaWorkspaceOrganizer : MonoBehaviour
         }
 
         string sceneJson = BuildSceneJson(capturedDetections);
-        RequestArrangementRecommendation(
-            sceneJson,
-            "Give short practical placement instructions for these detected objects.");
+        RequestArrangementRecommendation(sceneJson);
     }
 
     /// <summary>
@@ -419,7 +410,18 @@ public sealed class OllamaWorkspaceOrganizer : MonoBehaviour
             AppendJsonString(json, objectName);
             json.Append(",\"rawLabel\":");
             AppendJsonString(json, detection.label);
-            json.Append(",\"zone\":\"camera view\"");
+            string horizontalPosition = InferHorizontalPosition(detection.position.x);
+            string verticalPosition = InferVerticalPosition(detection.position.y);
+            string zone = InferZone(horizontalPosition, verticalPosition);
+
+            json.Append(",\"zone\":");
+            AppendJsonString(json, zone);
+            json.Append(",\"horizontalPosition\":");
+            AppendJsonString(json, horizontalPosition);
+            json.Append(",\"verticalPosition\":");
+            AppendJsonString(json, verticalPosition);
+            json.Append(",\"size\":");
+            AppendJsonString(json, InferSize(detection.scale));
             json.Append(",\"confidence\":");
             json.Append(confidence >= 0f ? confidence.ToString("0.00", CultureInfo.InvariantCulture) : "null");
             json.Append(",\"detectionIndex\":");
@@ -435,8 +437,94 @@ public sealed class OllamaWorkspaceOrganizer : MonoBehaviour
             json.Append("}}");
         }
 
-        json.Append("],\"zones\":[\"camera view\"],\"source\":\"Meta ObjectDetectionAgent\"}");
+        json.Append("],\"zones\":[\"top left\",\"top\",\"top right\",\"left\",\"center\",\"right\",\"bottom left\",\"bottom\",\"bottom right\"],\"source\":\"Meta ObjectDetectionAgent\"}");
         return json.ToString();
+    }
+
+    private static string InferHorizontalPosition(float x)
+    {
+        if (float.IsNaN(x) || float.IsInfinity(x))
+        {
+            return "camera view";
+        }
+
+        if (x >= 0f && x <= 1f)
+        {
+            if (x < 0.33f)
+            {
+                return "left";
+            }
+
+            if (x > 0.66f)
+            {
+                return "right";
+            }
+
+            return "center";
+        }
+
+        return "camera view";
+    }
+
+    private static string InferVerticalPosition(float y)
+    {
+        if (float.IsNaN(y) || float.IsInfinity(y))
+        {
+            return "camera view";
+        }
+
+        if (y >= 0f && y <= 1f)
+        {
+            if (y < 0.33f)
+            {
+                return "top";
+            }
+
+            if (y > 0.66f)
+            {
+                return "bottom";
+            }
+
+            return "middle";
+        }
+
+        return "camera view";
+    }
+
+    private static string InferZone(string horizontalPosition, string verticalPosition)
+    {
+        if (horizontalPosition == "camera view" && verticalPosition == "camera view")
+        {
+            return "camera view";
+        }
+
+        if (verticalPosition == "middle")
+        {
+            return horizontalPosition;
+        }
+
+        if (horizontalPosition == "center")
+        {
+            return verticalPosition;
+        }
+
+        return verticalPosition + " " + horizontalPosition;
+    }
+
+    private static string InferSize(Vector2 scale)
+    {
+        float area = Mathf.Abs(scale.x * scale.y);
+        if (area >= 0.16f)
+        {
+            return "large";
+        }
+
+        if (area >= 0.05f)
+        {
+            return "medium";
+        }
+
+        return "small";
     }
 
     private static void ParseDetectionLabel(string label, out string objectName, out float confidence)

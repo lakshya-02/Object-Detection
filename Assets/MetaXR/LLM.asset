@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: LLM
   m_EditorClassIdentifier: 
   supportedInferenceTypes: 0
-  host: http://192.168.0.180:11434
+  host: http://192.168.0.179:11434
   model: llama3.2
   supportsVision: 1

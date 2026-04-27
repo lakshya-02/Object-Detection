@@ -31,6 +31,140 @@ At runtime, pressing **A** does this:
    - `speak`
 6. The UI displays only the short `steps`
 
+## Speech-To-Speech Flow
+
+There is now a second, additive pipeline for voice interaction:
+
+```text
+Meta XR speech-to-text input
+-> transcript
+-> fresh object-detection scene JSON
+-> Ollama
+-> structured recommendation
+-> Meta TTS speech output using the ElevenLabs provider
+```
+
+This voice path does not replace the existing Sentis-based object detection flow.
+It reuses the same `ObjectDetectionAgent` by subscribing to one detection event when
+it needs scene context, then hands that scene JSON to Ollama.
+
+Current scene wiring:
+
+- `manager` has the voice assistant managers attached.
+- `SpeechInputManager` is set to `MetaSpeechToTextAgent`.
+- `VoiceAssistantOrchestrator` requests a fresh object-detection snapshot for each spoken prompt.
+- `OllamaSpeechPlanner` sends the detected scene plus your spoken custom prompt to `llama3.2`.
+- `SpeechOutputManager` speaks the `speak` response through the active Meta `TextToSpeechAgent`.
+- Press Quest right-controller **B** to start listening in a build.
+- Press keyboard **V** to start listening during editor/PC testing.
+
+The scene still needs a Meta XR speech-to-text block or `SpeechToTextAgent` present.
+When that block is present, `SpeechInputManager` auto-finds it and subscribes to its
+transcript event. The existing text-to-speech block is already referenced for spoken output.
+
+### New Voice Scripts
+
+- [Assets/Scripts/VoiceAssistantModels.cs](</c:/Users/Lakshya/Object Detection/Assets/Scripts/VoiceAssistantModels.cs>)
+  - Shared serializable models for scene data, Ollama payloads, and recommendations
+
+- [Assets/Scripts/SpeechInputManager.cs](</c:/Users/Lakshya/Object Detection/Assets/Scripts/SpeechInputManager.cs>)
+  - Accepts transcript input from `AppDictationExperience`, `SpeechToTextAgent`, or manual debug text
+
+- [Assets/Scripts/SceneContextBuilder.cs](</c:/Users/Lakshya/Object Detection/Assets/Scripts/SceneContextBuilder.cs>)
+  - Builds scene JSON from `BoxData`
+  - Builds the final grounded Ollama prompt
+
+- [Assets/Scripts/OllamaSpeechPlanner.cs](</c:/Users/Lakshya/Object Detection/Assets/Scripts/OllamaSpeechPlanner.cs>)
+  - Sends `UnityWebRequest` POST calls to Ollama
+  - Requests `format = "json"` and `stream = false`
+  - Parses and validates the structured model output
+
+- [Assets/Scripts/SpeechOutputManager.cs](</c:/Users/Lakshya/Object Detection/Assets/Scripts/SpeechOutputManager.cs>)
+  - Speaks `recommendation.speak`
+  - Works directly with Meta `TextToSpeechAgent`
+  - Can also fall back to any component with `Speak(string)` or `SpeakText(string)`
+
+- [Assets/Scripts/VoiceAssistantOrchestrator.cs](</c:/Users/Lakshya/Object Detection/Assets/Scripts/VoiceAssistantOrchestrator.cs>)
+  - Main glue script
+  - Tracks `Idle`, `Listening`, `Thinking`, `Speaking`, and `Error`
+  - Prevents overlapping requests
+
+### Suggested Voice Hierarchy
+
+Create one GameObject, for example `Voice Assistant`, and add:
+
+1. `SpeechInputManager`
+2. `SceneContextBuilder`
+3. `OllamaSpeechPlanner`
+4. `SpeechOutputManager`
+5. `VoiceAssistantOrchestrator`
+
+Recommended references:
+
+- `SpeechInputManager`
+  - assign `AppDictationExperience` if using Meta dictation
+  - or assign `SpeechToTextAgent` if using the Meta speech-to-text AI block
+
+- `OllamaSpeechPlanner`
+  - assign `SceneContextBuilder`
+  - model name: `llama3.2`
+  - endpoint: `http://localhost:11434/api/generate` in editor or same-machine testing
+
+- `SpeechOutputManager`
+  - assign Meta `TextToSpeechAgent`
+
+- `VoiceAssistantOrchestrator`
+  - assign all four managers above
+  - assign the existing `ObjectDetectionAgent`
+
+### Important Quest Network Note
+
+The speech planner defaults to:
+
+```text
+http://localhost:11434/api/generate
+```
+
+That is correct for editor or same-machine testing.
+
+For a Quest build talking to Ollama on your PC, `localhost` means the headset itself,
+so you must override the endpoint in the Inspector with your PC LAN IP, for example:
+
+```text
+http://192.168.0.179:11434/api/generate
+```
+
+### Debug Without Live Speech
+
+You can test the whole voice pipeline without live STT:
+
+1. Select the object with `SpeechInputManager`
+2. Enter text in `Debug Transcript`
+3. Use the component context menu:
+
+```text
+Speech Input/Submit Debug Transcript
+```
+
+Or trigger the full flow from `VoiceAssistantOrchestrator`:
+
+```text
+Voice Assistant/Run Debug Transcript
+```
+
+### UI Text Output
+
+`RecommendationTextOutput` now supports both:
+
+- `OllamaWorkspaceOrganizer`
+- `VoiceAssistantOrchestrator`
+
+So the same TMP text box can display:
+
+- detection/Ollama status
+- speech-orchestrator status
+- final short recommendation steps
+
 ## Main Scripts
 
 - [Assets/Scripts/OllamaWorkspaceOrganizer.cs](</c:/Users/Lakshya/Object Detection/Assets/Scripts/OllamaWorkspaceOrganizer.cs>)
@@ -69,7 +203,7 @@ The project expects a local Ollama server on the PC.
 Current working endpoint:
 
 ```text
-http://192.168.0.180:11434/api/generate
+http://192.168.0.179:11434/api/generate
 ```
 
 Expected model:
@@ -85,7 +219,7 @@ Current provider asset host:
 It should point to:
 
 ```text
-http://192.168.0.180:11434
+http://192.168.0.179:11434
 ```
 
 ## What A Button Does Right Now
@@ -227,7 +361,7 @@ Connection refused. Is Ollama running and reachable at ...
 Check Ollama tags:
 
 ```powershell
-Invoke-RestMethod http://192.168.0.180:11434/api/tags
+Invoke-RestMethod http://192.168.0.179:11434/api/tags
 ```
 
 Quick model test:

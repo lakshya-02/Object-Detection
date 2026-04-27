@@ -15,22 +15,28 @@ namespace WorkspaceVoiceAssistant
         private const string SceneJsonPlaceholder = "{SCENE_JSON_HERE}";
         private const string GoalPlaceholder = "{USER_GOAL_HERE}";
         private const string DefaultPromptTemplate =
-            "You are a real-world workspace organization assistant for a mixed reality app.\n" +
-            "Use only the provided objects, zones, and surface data.\n" +
-            "Do not invent missing objects, furniture, storage, or tools.\n" +
-            "Keep liquids away from electronics.\n" +
-            "Prioritize the user's goal when choosing the arrangement.\n" +
+            "You are a precise mixed-reality workspace organization assistant.\n" +
+            "Use only detected objects from objects[].name and the supplied screen positions.\n" +
+            "Do not invent missing objects, furniture, storage, drawers, shelves, or tools.\n" +
+            "Use relative placement when possible: left of, right of, above, below, beside, group with, separate from.\n" +
+            "If two detected objects should be arranged together, name both objects in the same instruction.\n" +
+            "If there are electronics and drinks, put drinks away from electronics.\n" +
+            "If there are papers/books/notebooks, stack or align them in one zone.\n" +
+            "If there are keyboard/mouse/laptop/monitor objects, keep the main work object centered and move support items beside it.\n" +
+            "Prioritize the user's spoken goal over the default cleanup goal.\n" +
             "Return valid JSON only.\n" +
             "No markdown.\n" +
             "No explanation outside the schema.\n" +
-            "Give 2 to 4 short, actionable steps.\n\n" +
+            "Give 3 to 5 detailed but practical steps.\n" +
+            "Each step should say exactly which detected object to move and where to place it relative to another detected object or screen zone.\n" +
+            "The speak field should be 2 to 4 natural sentences that summarize the most important placements using detected object names.\n\n" +
             "User goal: " + GoalPlaceholder + "\n\n" +
             "Scene JSON:\n" + SceneJsonPlaceholder + "\n\n" +
             "Return exactly this JSON schema:\n" +
             "{\n" +
-            "  \"summary\": \"short summary\",\n" +
-            "  \"steps\": [\"step 1\", \"step 2\", \"step 3\"],\n" +
-            "  \"speak\": \"natural spoken instruction\"\n" +
+            "  \"summary\": \"specific organization plan\",\n" +
+            "  \"steps\": [\"specific object placement step 1\", \"specific object placement step 2\", \"specific object placement step 3\"],\n" +
+            "  \"speak\": \"natural spoken guidance with specific object placements\"\n" +
             "}";
 
         [Header("Prompt")]
@@ -109,7 +115,15 @@ namespace WorkspaceVoiceAssistant
                     name = name,
                     zone = zone,
                     confidence = confidence,
-                    rawLabel = rawLabel
+                    rawLabel = rawLabel,
+                    detectionIndex = i,
+                    x = detection.position.x,
+                    y = detection.position.y,
+                    width = detection.scale.x,
+                    height = detection.scale.y,
+                    horizontalPosition = InferHorizontalPosition(detection),
+                    verticalPosition = InferVerticalPosition(detection),
+                    size = InferSize(detection)
                 });
 
                 if (!string.IsNullOrWhiteSpace(zone) && zones.Add(zone))
@@ -195,6 +209,29 @@ namespace WorkspaceVoiceAssistant
 
         private static string InferZone(BoxData detection)
         {
+            string horizontal = InferHorizontalPosition(detection);
+            string vertical = InferVerticalPosition(detection);
+
+            if (horizontal == "camera view" && vertical == "camera view")
+            {
+                return "camera view";
+            }
+
+            if (vertical == "middle")
+            {
+                return horizontal;
+            }
+
+            if (horizontal == "center")
+            {
+                return vertical;
+            }
+
+            return vertical + " " + horizontal;
+        }
+
+        private static string InferHorizontalPosition(BoxData detection)
+        {
             if (float.IsNaN(detection.position.x) || float.IsInfinity(detection.position.x))
             {
                 return "camera view";
@@ -217,6 +254,48 @@ namespace WorkspaceVoiceAssistant
             }
 
             return "camera view";
+        }
+
+        private static string InferVerticalPosition(BoxData detection)
+        {
+            if (float.IsNaN(detection.position.y) || float.IsInfinity(detection.position.y))
+            {
+                return "camera view";
+            }
+
+            float y = detection.position.y;
+            if (y >= 0f && y <= 1f)
+            {
+                if (y < 0.33f)
+                {
+                    return "top";
+                }
+
+                if (y > 0.66f)
+                {
+                    return "bottom";
+                }
+
+                return "middle";
+            }
+
+            return "camera view";
+        }
+
+        private static string InferSize(BoxData detection)
+        {
+            float area = Mathf.Abs(detection.scale.x * detection.scale.y);
+            if (area >= 0.16f)
+            {
+                return "large";
+            }
+
+            if (area >= 0.05f)
+            {
+                return "medium";
+            }
+
+            return "small";
         }
     }
 }

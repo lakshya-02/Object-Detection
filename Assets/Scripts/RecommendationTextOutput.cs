@@ -9,6 +9,9 @@ public class RecommendationTextOutput : MonoBehaviour
     [SerializeField] private VoiceAssistantOrchestrator voiceAssistant;
     [SerializeField, Min(1f)] private float outputFontSize = 4f;
     [SerializeField, Min(1)] private int maxDisplayedSteps = 3;
+    [SerializeField] private bool showFullOllamaResponse = true;
+
+    private string latestRecommendationText = string.Empty;
 
     private void Awake()
     {
@@ -87,6 +90,7 @@ public class RecommendationTextOutput : MonoBehaviour
         }
 
         outputText.text = BuildInstructionText(recommendation);
+        latestRecommendationText = outputText.text;
     }
 
     public void ShowRecommendation(Recommendation recommendation)
@@ -97,6 +101,7 @@ public class RecommendationTextOutput : MonoBehaviour
         }
 
         outputText.text = BuildInstructionText(recommendation);
+        latestRecommendationText = outputText.text;
     }
 
     public void ShowError(string error)
@@ -107,12 +112,21 @@ public class RecommendationTextOutput : MonoBehaviour
         }
 
         outputText.text = "LLM Error:\n" + error;
+        latestRecommendationText = string.Empty;
     }
 
     public void ShowStatus(string status)
     {
         if (outputText == null)
         {
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(latestRecommendationText)
+            && !string.IsNullOrWhiteSpace(status)
+            && status.Contains("Speaking", System.StringComparison.OrdinalIgnoreCase))
+        {
+            outputText.text = latestRecommendationText + "\n\nStatus: " + status;
             return;
         }
 
@@ -133,23 +147,54 @@ public class RecommendationTextOutput : MonoBehaviour
 
     private string BuildInstructionText(WorkspaceArrangementRecommendation recommendation)
     {
-        if (recommendation.steps == null || recommendation.steps.Length == 0)
+        if (!showFullOllamaResponse)
         {
-            return recommendation.speak;
+            if (recommendation.steps == null || recommendation.steps.Length == 0)
+            {
+                return recommendation.speak;
+            }
+
+            int shortCount = Mathf.Min(maxDisplayedSteps, recommendation.steps.Length);
+            return string.Join("\n", recommendation.steps, 0, shortCount);
         }
 
         int count = Mathf.Min(maxDisplayedSteps, recommendation.steps.Length);
-        return string.Join("\n", recommendation.steps, 0, count);
+        string steps = recommendation.steps == null || recommendation.steps.Length == 0
+            ? "(no steps)"
+            : string.Join("\n", recommendation.steps, 0, count);
+
+        return "Ollama Response\n"
+            + "Summary: " + SafeText(recommendation.summary) + "\n"
+            + "Steps:\n" + steps + "\n"
+            + "Voice: " + SafeText(recommendation.speak);
     }
 
     private string BuildInstructionText(Recommendation recommendation)
     {
-        if (recommendation.steps == null || recommendation.steps.Count == 0)
+        if (!showFullOllamaResponse)
         {
-            return recommendation.speak;
+            if (recommendation.steps == null || recommendation.steps.Count == 0)
+            {
+                return recommendation.speak;
+            }
+
+            int shortCount = Mathf.Min(maxDisplayedSteps, recommendation.steps.Count);
+            return string.Join("\n", recommendation.steps.GetRange(0, shortCount));
         }
 
         int count = Mathf.Min(maxDisplayedSteps, recommendation.steps.Count);
-        return string.Join("\n", recommendation.steps.GetRange(0, count));
+        string steps = recommendation.steps == null || recommendation.steps.Count == 0
+            ? "(no steps)"
+            : string.Join("\n", recommendation.steps.GetRange(0, count));
+
+        return "Ollama Response\n"
+            + "Summary: " + SafeText(recommendation.summary) + "\n"
+            + "Steps:\n" + steps + "\n"
+            + "Voice: " + SafeText(recommendation.speak);
+    }
+
+    private static string SafeText(string text)
+    {
+        return string.IsNullOrWhiteSpace(text) ? "(empty)" : text.Trim();
     }
 }

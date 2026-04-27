@@ -4360,6 +4360,97 @@ Transform:
   m_Children: []
   m_Father: {fileID: 760747325}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &736996729
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 736996732}
+  - component: {fileID: 736996731}
+  - component: {fileID: 736996730}
+  m_Layer: 0
+  m_Name: '[BuildingBlock] Speech To Text'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &736996730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736996729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ebafe374ff6848bb9b28beabd283b5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  providerAsset: {fileID: 11400000, guid: f11edd3e28f8b804693496b8922beaf4, type: 2}
+  deviceName: Headset Microphone (Oculus Virtual Audio Device)
+  sampleRate: 16000
+  channels: 1
+  rmsWindowSeconds: 0.02
+  vadStartThresholdDb: 8
+  vadStopThresholdDb: 4
+  maxSilenceSeconds: 1
+  minSpeechSeconds: 0.25
+  endPadSeconds: 0.06
+  envelopeAttackSeconds: 0.02
+  envelopeReleaseSeconds: 0.1
+  noiseWindowSeconds: 1.5
+  noisePercentile: 0.2
+  quietMarginDb: 1
+  maxDurationSeconds: 20
+  prePadSeconds: 0.35
+  manualStopOnly: 0
+  onTranscript:
+    m_PersistentCalls:
+      m_Calls: []
+  lastTranscript: 
+--- !u!114 &736996731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736996729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b023183069df224080314a560e6e1ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockId: b246d3bb-3f91-4efe-893c-c4c2d0de7210
+  instanceId: 609fcc21-ce88-4771-9582-d2cf27848b98
+  version: 1
+  installationRoutineCheckpoint:
+    _installationRoutineId: 23952c08-05e9-48de-b271-fadf8448828c
+    _installationVariants:
+    - _memberName: providerAssetSelection
+      _value: Create a new provider asset
+    - _memberName: inferenceType
+      _value: '{"value__":1}'
+    - _memberName: modelProvider
+      _value: ElevenLabs - scribe_v1
+--- !u!4 &736996732
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736996729}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &737685553
 GameObject:
   m_ObjectHideFlags: 0
@@ -5663,7 +5754,7 @@ MonoBehaviour:
   requestFaceTrackingPermissionOnStartup: 0
   requestEyeTrackingPermissionOnStartup: 0
   requestScenePermissionOnStartup: 1
-  requestRecordAudioPermissionOnStartup: 0
+  requestRecordAudioPermissionOnStartup: 1
   requestPassthroughCameraAccessPermissionOnStartup: 1
   _localDimming: 1
   _trackingOriginType: 1
@@ -11481,6 +11572,186 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.00616638, y: -0.030066561, z: -0.020585023}
     m_Extent: {x: 0.033926036, y: 0.041736547, z: 0.054627255}
   m_DirtyAABB: 0
+--- !u!1 &1447627943
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1447627947}
+  - component: {fileID: 1447627946}
+  - component: {fileID: 1447627945}
+  - component: {fileID: 1447627944}
+  m_Layer: 0
+  m_Name: '[BuildingBlock] Text To Speech'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1447627944
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447627943}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1447627945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447627943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 439814c7becd54b4b9004c9d8c7aefea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  providerAsset: {fileID: 11400000, guid: 63847bd5ba44b2b40b572d39d28c1ef3, type: 2}
+  audioSource: {fileID: 1447627944}
+  preset: 1
+  text: I love Llamas. I think they are the most beautiful animals in the world.
+  onClipReady:
+    m_PersistentCalls:
+      m_Calls: []
+  onSpeakStarting:
+    m_PersistentCalls:
+      m_Calls: []
+  onSpeakFinished:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1447627946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447627943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b023183069df224080314a560e6e1ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockId: 89916747-a8be-4d3e-8563-65b00c7d2ffa
+  instanceId: 24dbae7f-4f27-436c-8201-9e7bd8aaed5f
+  version: 1
+  installationRoutineCheckpoint:
+    _installationRoutineId: 0844a8bd-2bf8-4cfb-8d71-911f1f917314
+    _installationVariants:
+    - _memberName: providerAssetSelection
+      _value: 
+    - _memberName: inferenceType
+      _value: '{"value__":1}'
+    - _memberName: modelProvider
+      _value: ElevenLabs - eleven_flash_v2_5
+--- !u!4 &1447627947
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447627943}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1463254468
 GameObject:
   m_ObjectHideFlags: 0
@@ -13800,6 +14071,14 @@ GameObject:
   - component: {fileID: 1886208989}
   - component: {fileID: 1886208988}
   - component: {fileID: 1886208990}
+  - component: {fileID: 1886208991}
+  - component: {fileID: 1886208992}
+  - component: {fileID: 1886208993}
+  - component: {fileID: 1886208994}
+  - component: {fileID: 1886208995}
+  - component: {fileID: 1886208996}
+  - component: {fileID: 1886208997}
+  - component: {fileID: 1886208998}
   m_Layer: 0
   m_Name: manager
   m_TagString: Untagged
@@ -13820,19 +14099,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   providerAsset: {fileID: 11400000, guid: efd262733c089f74d93632215a0ea03f, type: 2}
-  ollamaEndpoint: http://localhost:11434/api/generate
+  ollamaEndpoint: http://192.168.0.179:11434/api/generate
   modelName: llama3.2
-  requestTimeoutSeconds: 60
+  requestTimeoutSeconds: 120
   promptTemplate: 
-  defaultUserGoal: 'Give practical arrangement instructions for this detected workspace. '
+  defaultUserGoal: This place is cluttered and I want to clean it and set it in a
+    proper way.
   onRecommendationReceived:
     m_PersistentCalls:
       m_Calls: []
   onRequestFailed:
     m_PersistentCalls:
       m_Calls: []
-  requestTestOnAButton: 1
+  requestTestOnAButton: 0
   buttonRequestCooldownSeconds: 1
+  objectDetectionAgent: {fileID: 1407399827}
+  detectionWaitTimeoutSeconds: 8
 --- !u!4 &1886208989
 Transform:
   m_ObjectHideFlags: 0
@@ -13845,7 +14127,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2111000002}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1886208990
@@ -13862,8 +14145,186 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outputText: {fileID: 1964602098}
   organizer: {fileID: 1886208988}
+  voiceAssistant: {fileID: 1886208995}
   outputFontSize: 4
   maxDisplayedSteps: 3
+--- !u!114 &1886208991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886208987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc4575bf505fda45b79c9967b7a4f89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backend: 2
+  dictationExperience: {fileID: 0}
+  speechToTextAgent: {fileID: 736996730}
+  autoFindSceneComponents: 1
+  latestTranscript: 
+  debugTranscript: Organize this desk for studying
+  onSpeechRecognized:
+    m_PersistentCalls:
+      m_Calls: []
+  onSpeechError:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1886208992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886208987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22616ce45dc285e4aa80a73953d00ead, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptTemplate: 
+  defaultGoal: This place is cluttered and I want to clean it and set it in a proper
+    way.
+  defaultSurface: desk
+  prettyPrintSceneJson: 1
+--- !u!114 &1886208993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886208987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fcb3f78295facb4aad36fa67bac85ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  providerAsset: {fileID: 11400000, guid: efd262733c089f74d93632215a0ea03f, type: 2}
+  ollamaEndpoint: http://192.168.0.179:11434/api/generate
+  modelName: llama3.2
+  requestTimeoutSeconds: 120
+  sceneContextBuilder: {fileID: 1886208992}
+  onRecommendationReceived:
+    m_PersistentCalls:
+      m_Calls: []
+  onRequestFailed:
+    m_PersistentCalls:
+      m_Calls: []
+  onRequestStarted:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1886208994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886208987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92f9e603c25b08e49af49ade590bf119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  metaTextToSpeechAgent: {fileID: 1447627945}
+  fallbackSpeaker: {fileID: 0}
+  genericSpeechFinishedDelaySeconds: 2
+  stepPauseSeconds: 0.35
+  metaSpeechTimeoutSeconds: 30
+  onSpeechStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  onSpeechError:
+    m_PersistentCalls:
+      m_Calls: []
+  onSpeechFinished:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1886208995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886208987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc0fb397bbb73f41b01ffcee7a0539b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speechInputManager: {fileID: 1886208991}
+  sceneContextBuilder: {fileID: 1886208992}
+  ollamaSpeechPlanner: {fileID: 1886208993}
+  speechOutputManager: {fileID: 1886208994}
+  objectDetectionAgent: {fileID: 1407399827}
+  requestFreshSceneOnSpeech: 1
+  useCachedSceneIfFreshDetectionFails: 1
+  sceneCaptureTimeoutSeconds: 8
+  autoSpeakRecommendation: 1
+  latestSceneJson: 
+  currentState: 0
+  onRecommendationReady:
+    m_PersistentCalls:
+      m_Calls: []
+  onError:
+    m_PersistentCalls:
+      m_Calls: []
+  onStatusChanged:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1886208996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886208987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0fbe3e3a0f3416ba0dd7d3cb41b80a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  voiceAssistant: {fileID: 1886208995}
+  listenOnRightControllerB: 0
+  listenOnKeyboardV: 0
+  cooldownSeconds: 0.75
+--- !u!114 &1886208997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886208987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bb6b7d79d2a4e13a7c5ac5041b0035f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  organizer: {fileID: 1886208988}
+  speechOutputManager: {fileID: 1886208994}
+  speakOrganizerRecommendations: 1
+--- !u!114 &1886208998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886208987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed43c9d03841486eb3a6862c9c42b997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  organizer: {fileID: 1886208988}
+  voiceAssistant: {fileID: 1886208995}
+  speechBridge: {fileID: 1886208997}
+  listenForPromptOnLeftX: 1
+  requestDefaultOnLeftY: 1
+  listenForPromptOnKeyboardX: 1
+  requestDefaultOnKeyboardY: 1
+  suppressSpeechOnDefaultRequest: 0
+  cooldownSeconds: 1
 --- !u!1 &1887147507
 GameObject:
   m_ObjectHideFlags: 0
@@ -14503,8 +14964,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 6
-  m_fontSizeBase: 6
+  m_fontSize: 4
+  m_fontSizeBase: 4
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -14522,7 +14983,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
@@ -15382,6 +15843,103 @@ Transform:
   - {fileID: 2102413000}
   m_Father: {fileID: 1463254469}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2111000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2111000002}
+  - component: {fileID: 2111000003}
+  - component: {fileID: 2111000004}
+  - component: {fileID: 2111000005}
+  m_Layer: 0
+  m_Name: Ghost System
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2111000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1886208989}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2111000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c9d80b4d6d14e58a65d4f74d8f42d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placeholderScale: {x: 0.3, y: 0.15, z: 0.2}
+  ghostColor: {r: 0.35, g: 0.9, b: 1, a: 0.4}
+  defaultAlpha: 0.4
+  pulseMinAlpha: 0.3
+  pulseMaxAlpha: 0.5
+  pulseSpeed: 2
+  ghostContainerName: GhostPreviewContainer
+  ghostContainer: {fileID: 0}
+--- !u!114 &2111000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53072c1e9269497ab6d11de1f4946641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ovrCameraRig: {fileID: 0}
+  overrideCamera: {fileID: 0}
+  maxRayDistance: 8
+  fallbackDepth: 0.6
+  preferRealWorldLayer: 1
+  additionalLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!114 &2111000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4de9b23a9d0f45f4a6c5ca55733293a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostManager: {fileID: 2111000003}
+  depthRaycaster: {fileID: 2111000004}
+  onGhostSpawned:
+    m_PersistentCalls:
+      m_Calls: []
+  onGhostConfirmed:
+    m_PersistentCalls:
+      m_Calls: []
+  onGhostError:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2127135146
 GameObject:
   m_ObjectHideFlags: 0
@@ -15484,3 +16042,5 @@ SceneRoots:
   - {fileID: 1659356723}
   - {fileID: 1886208989}
   - {fileID: 26880772}
+  - {fileID: 1447627947}
+  - {fileID: 736996732}

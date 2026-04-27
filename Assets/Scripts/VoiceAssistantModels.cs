@@ -11,6 +11,14 @@ namespace WorkspaceVoiceAssistant
         public string zone;
         public float confidence;
         public string rawLabel;
+        public int detectionIndex;
+        public float x;
+        public float y;
+        public float width;
+        public float height;
+        public string horizontalPosition;
+        public string verticalPosition;
+        public string size;
     }
 
     [Serializable]

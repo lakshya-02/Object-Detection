@@ -46,6 +46,8 @@ namespace WorkspaceVoiceAssistant
 
             if (metaTextToSpeechAgent != null)
             {
+                metaTextToSpeechAgent.onClipReady.AddListener(HandleMetaClipReady);
+                metaTextToSpeechAgent.onSpeakStarting.AddListener(HandleMetaSpeakStarting);
                 metaTextToSpeechAgent.onSpeakFinished.AddListener(HandleMetaSpeechFinished);
             }
         }
@@ -54,6 +56,8 @@ namespace WorkspaceVoiceAssistant
         {
             if (metaTextToSpeechAgent != null)
             {
+                metaTextToSpeechAgent.onClipReady.RemoveListener(HandleMetaClipReady);
+                metaTextToSpeechAgent.onSpeakStarting.RemoveListener(HandleMetaSpeakStarting);
                 metaTextToSpeechAgent.onSpeakFinished.RemoveListener(HandleMetaSpeechFinished);
             }
         }
@@ -82,6 +86,30 @@ namespace WorkspaceVoiceAssistant
             Speak(speechText);
         }
 
+        public void SpeakRecommendation(global::WorkspaceArrangementRecommendation recommendation)
+        {
+            if (recommendation == null)
+            {
+                ReportSpeechError("Recommendation was null.");
+                return;
+            }
+
+            Debug.Log("[SpeechOutputManager] Summary: " + recommendation.summary, this);
+            if (recommendation.steps != null)
+            {
+                for (int i = 0; i < recommendation.steps.Length; i++)
+                {
+                    Debug.Log("[SpeechOutputManager] Step " + (i + 1) + ": " + recommendation.steps[i], this);
+                }
+            }
+
+            string speechText = !string.IsNullOrWhiteSpace(recommendation.speak)
+                ? recommendation.speak
+                : string.Join(" ", recommendation.steps ?? Array.Empty<string>());
+
+            Speak(speechText);
+        }
+
         public void Speak(string text)
         {
             ResolveReferences();
@@ -96,6 +124,7 @@ namespace WorkspaceVoiceAssistant
 
             if (metaTextToSpeechAgent != null)
             {
+                Debug.Log("[SpeechOutputManager] Sending text to Meta TextToSpeechAgent. Characters: " + text.Length, this);
                 onSpeechStarted.Invoke(text);
                 SpeechStarted?.Invoke(text);
                 metaTextToSpeechAgent.SpeakText(text);
@@ -183,8 +212,28 @@ namespace WorkspaceVoiceAssistant
 
         private void HandleMetaSpeechFinished()
         {
+            Debug.Log("[SpeechOutputManager] Meta TextToSpeechAgent finished playback.", this);
             onSpeechFinished.Invoke();
             SpeechFinished?.Invoke();
+        }
+
+        private void HandleMetaClipReady(AudioClip clip)
+        {
+            if (clip == null)
+            {
+                Debug.LogWarning("[SpeechOutputManager] Meta TextToSpeechAgent reported a null AudioClip.", this);
+                return;
+            }
+
+            Debug.Log(
+                "[SpeechOutputManager] Meta TextToSpeechAgent clip ready. Length: " +
+                clip.length.ToString("0.00") + "s, samples: " + clip.samples + ", channels: " + clip.channels,
+                this);
+        }
+
+        private void HandleMetaSpeakStarting(string spokenText)
+        {
+            Debug.Log("[SpeechOutputManager] Meta TextToSpeechAgent started playback.", this);
         }
 
         private IEnumerator NotifyFinishedAfterDelay(float delaySeconds)

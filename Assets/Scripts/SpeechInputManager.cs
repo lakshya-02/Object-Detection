@@ -39,6 +39,8 @@ namespace WorkspaceVoiceAssistant
         [SerializeField] private StringEvent onSpeechError = new StringEvent();
 
         private bool isListening;
+        private AppDictationExperience subscribedDictationExperience;
+        private SpeechToTextAgent subscribedSpeechToTextAgent;
 
         public event Action<string> SpeechRecognized;
         public event Action<string> SpeechError;
@@ -73,6 +75,7 @@ namespace WorkspaceVoiceAssistant
         public void StartListening()
         {
             ResolveReferences();
+            SubscribeToSpeechSources();
 
             SpeechInputBackend activeBackend = GetActiveBackend();
             switch (activeBackend)
@@ -212,27 +215,41 @@ namespace WorkspaceVoiceAssistant
 
         private void SubscribeToSpeechSources()
         {
-            if (dictationExperience != null)
+            if (dictationExperience != null && subscribedDictationExperience != dictationExperience)
             {
+                if (subscribedDictationExperience != null)
+                {
+                    subscribedDictationExperience.DictationEvents.OnFullTranscription.RemoveListener(OnSpeechRecognized);
+                }
+
                 dictationExperience.DictationEvents.OnFullTranscription.AddListener(OnSpeechRecognized);
+                subscribedDictationExperience = dictationExperience;
             }
 
-            if (speechToTextAgent != null)
+            if (speechToTextAgent != null && subscribedSpeechToTextAgent != speechToTextAgent)
             {
+                if (subscribedSpeechToTextAgent != null)
+                {
+                    subscribedSpeechToTextAgent.onTranscript.RemoveListener(OnSpeechRecognized);
+                }
+
                 speechToTextAgent.onTranscript.AddListener(OnSpeechRecognized);
+                subscribedSpeechToTextAgent = speechToTextAgent;
             }
         }
 
         private void UnsubscribeFromSpeechSources()
         {
-            if (dictationExperience != null)
+            if (subscribedDictationExperience != null)
             {
-                dictationExperience.DictationEvents.OnFullTranscription.RemoveListener(OnSpeechRecognized);
+                subscribedDictationExperience.DictationEvents.OnFullTranscription.RemoveListener(OnSpeechRecognized);
+                subscribedDictationExperience = null;
             }
 
-            if (speechToTextAgent != null)
+            if (subscribedSpeechToTextAgent != null)
             {
-                speechToTextAgent.onTranscript.RemoveListener(OnSpeechRecognized);
+                subscribedSpeechToTextAgent.onTranscript.RemoveListener(OnSpeechRecognized);
+                subscribedSpeechToTextAgent = null;
             }
         }
 
