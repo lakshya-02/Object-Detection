@@ -79,7 +79,13 @@ public sealed class WorkspaceRequestInputTrigger : MonoBehaviour
         if (uiOnlyPressedThisFrame)
         {
             nextAllowedRequestTime = Time.unscaledTime + cooldownSeconds;
-            Debug.Log("[WorkspaceRequestInputTrigger] Y pressed. Requesting default object detection and Ollama guidance.", this);
+            Debug.Log("[WorkspaceRequestInputTrigger] Y pressed. Requesting a fresh object inventory.", this);
+
+            if (voiceAssistant != null)
+            {
+                voiceAssistant.RunDefaultQuestion();
+                return;
+            }
 
             if (suppressSpeechOnDefaultRequest && speechBridge != null)
             {

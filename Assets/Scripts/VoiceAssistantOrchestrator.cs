@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Meta.XR.BuildingBlocks.AIBlocks;
+using Meta.XR;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -31,7 +32,6 @@ namespace WorkspaceVoiceAssistant
         [Header("Object Detection")]
         [SerializeField] private ObjectDetectionAgent objectDetectionAgent;
         [SerializeField] private bool requestFreshSceneOnSpeech = true;
-        [SerializeField] private bool useCachedSceneIfFreshDetectionFails = true;
         [SerializeField, Min(0.5f)] private float sceneCaptureTimeoutSeconds = 4f;
 
         [Header("Output")]
@@ -47,6 +47,7 @@ namespace WorkspaceVoiceAssistant
 
         private Coroutine activeSpeechRoutine;
         private bool isRequestInFlight;
+        private UnityAction<List<BoxData>> detectionListener;
 
         public event Action<Recommendation> RecommendationReady;
         public event Action<string> ErrorReceived;
@@ -93,6 +94,17 @@ namespace WorkspaceVoiceAssistant
 
         private void OnDisable()
         {
+            if (detectionListener != null && objectDetectionAgent != null)
+            {
+                objectDetectionAgent.OnDetectionResponseReceived.RemoveListener(detectionListener);
+                detectionListener = null;
+            }
+
+            if (activeSpeechRoutine != null) StopCoroutine(activeSpeechRoutine);
+            activeSpeechRoutine = null;
+            isRequestInFlight = false;
+            ollamaSpeechPlanner?.CancelActiveRequest();
+
             if (speechInputManager != null)
             {
                 speechInputManager.SpeechRecognized -= HandleSpeechRecognized;
@@ -165,6 +177,11 @@ namespace WorkspaceVoiceAssistant
             HandleSpeechRecognized("Organize this desk efficiently");
         }
 
+        public void RunDefaultQuestion()
+        {
+            HandleSpeechRecognized("What objects can you see?");
+        }
+
         public void SetLatestSceneJson(string sceneJson)
         {
             latestSceneJson = string.IsNullOrWhiteSpace(sceneJson) ? string.Empty : sceneJson.Trim();
@@ -199,10 +216,11 @@ namespace WorkspaceVoiceAssistant
             isRequestInFlight = true;
             SetState(VoiceAssistantState.Thinking, "Preparing scene context...");
 
-            string sceneJsonToUse = latestSceneJson;
+            string sceneJsonToUse = requestFreshSceneOnSpeech ? null : latestSceneJson;
 
             if (requestFreshSceneOnSpeech)
             {
+                SetState(VoiceAssistantState.Thinking, "Detecting objects...");
                 yield return CaptureFreshSceneJson(sceneJson =>
                 {
                     sceneJsonToUse = sceneJson;
@@ -212,14 +230,33 @@ namespace WorkspaceVoiceAssistant
 
             if (string.IsNullOrWhiteSpace(sceneJsonToUse))
             {
-                if (useCachedSceneIfFreshDetectionFails && !string.IsNullOrWhiteSpace(latestSceneJson))
-                {
-                    sceneJsonToUse = latestSceneJson;
-                }
-                else if (sceneContextBuilder != null)
-                {
-                    sceneJsonToUse = sceneContextBuilder.BuildSceneJson(sceneContextBuilder.CreateEmptySceneData());
-                }
+                activeSpeechRoutine = null;
+                HandleError("A fresh detection did not return. Please try again while looking at the objects.");
+                yield break;
+            }
+
+            SceneData scene;
+            try
+            {
+                scene = JsonUtility.FromJson<SceneData>(sceneJsonToUse);
+            }
+            catch (ArgumentException)
+            {
+                scene = null;
+            }
+
+            if (scene == null || scene.objects == null)
+            {
+                activeSpeechRoutine = null;
+                HandleError("The detection snapshot was invalid.");
+                yield break;
+            }
+
+            if (sceneContextBuilder != null && sceneContextBuilder.TryAnswer(scene, transcript, out Recommendation localAnswer))
+            {
+                activeSpeechRoutine = null;
+                HandleRecommendationReceived(localAnswer);
+                yield break;
             }
 
             if (ollamaSpeechPlanner == null)
@@ -244,13 +281,13 @@ namespace WorkspaceVoiceAssistant
             bool received = false;
             List<BoxData> detections = null;
 
-            UnityAction<List<BoxData>> listener = boxes =>
+            detectionListener = boxes =>
             {
                 detections = boxes != null ? new List<BoxData>(boxes) : new List<BoxData>();
                 received = true;
             };
 
-            objectDetectionAgent.OnDetectionResponseReceived.AddListener(listener);
+            objectDetectionAgent.OnDetectionResponseReceived.AddListener(detectionListener);
             objectDetectionAgent.CallInference();
 
             float deadline = Time.unscaledTime + sceneCaptureTimeoutSeconds;
@@ -259,19 +296,25 @@ namespace WorkspaceVoiceAssistant
                 yield return null;
             }
 
-            objectDetectionAgent.OnDetectionResponseReceived.RemoveListener(listener);
+            objectDetectionAgent.OnDetectionResponseReceived.RemoveListener(detectionListener);
+            detectionListener = null;
 
             if (!received)
             {
-                if (!useCachedSceneIfFreshDetectionFails)
-                {
-                    HandleError("Object detection did not return before timeout.");
-                }
-
                 yield break;
             }
 
-            string sceneJson = sceneContextBuilder.BuildSceneJson(detections);
+            PassthroughCameraAccess cameraAccess = FindAnyObjectByType<PassthroughCameraAccess>();
+            Texture cameraTexture = cameraAccess != null ? cameraAccess.GetTexture() : null;
+            SceneData scene = sceneContextBuilder.BuildSceneData(
+                detections, cameraTexture != null ? cameraTexture.width : 0,
+                cameraTexture != null ? cameraTexture.height : 0);
+            if (cameraTexture != null && cameraAccess.IsPlaying)
+            {
+                // shortcut: one synchronous readback per spoken question may pause a frame; use async readback if measured latency is noticeable.
+                sceneContextBuilder.ApplyColors(scene, cameraAccess.GetColors(), cameraTexture.width, cameraTexture.height);
+            }
+            string sceneJson = sceneContextBuilder.BuildSceneJson(scene);
             onSceneReady?.Invoke(sceneJson);
         }
 

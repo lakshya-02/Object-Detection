@@ -30,6 +30,7 @@ namespace WorkspaceVoiceAssistant
         [SerializeField] private UnityEvent onSpeechFinished = new UnityEvent();
 
         private Coroutine fallbackFinishRoutine;
+        private Coroutine metaTimeoutRoutine;
 
         public event Action<string> SpeechStarted;
         public event Action<string> SpeechError;
@@ -54,6 +55,7 @@ namespace WorkspaceVoiceAssistant
 
         private void OnDisable()
         {
+            StopSpeaking();
             if (metaTextToSpeechAgent != null)
             {
                 metaTextToSpeechAgent.onClipReady.RemoveListener(HandleMetaClipReady);
@@ -128,6 +130,7 @@ namespace WorkspaceVoiceAssistant
                 onSpeechStarted.Invoke(text);
                 SpeechStarted?.Invoke(text);
                 metaTextToSpeechAgent.SpeakText(text);
+                metaTimeoutRoutine = StartCoroutine(ReportMetaTimeout());
                 return;
             }
 
@@ -144,6 +147,12 @@ namespace WorkspaceVoiceAssistant
 
         public void StopSpeaking()
         {
+            if (metaTimeoutRoutine != null)
+            {
+                StopCoroutine(metaTimeoutRoutine);
+                metaTimeoutRoutine = null;
+            }
+
             if (fallbackFinishRoutine != null)
             {
                 StopCoroutine(fallbackFinishRoutine);
@@ -212,6 +221,11 @@ namespace WorkspaceVoiceAssistant
 
         private void HandleMetaSpeechFinished()
         {
+            if (metaTimeoutRoutine != null)
+            {
+                StopCoroutine(metaTimeoutRoutine);
+                metaTimeoutRoutine = null;
+            }
             Debug.Log("[SpeechOutputManager] Meta TextToSpeechAgent finished playback.", this);
             onSpeechFinished.Invoke();
             SpeechFinished?.Invoke();
@@ -225,10 +239,30 @@ namespace WorkspaceVoiceAssistant
                 return;
             }
 
+            if (metaTimeoutRoutine != null)
+            {
+                StopCoroutine(metaTimeoutRoutine);
+                metaTimeoutRoutine = null;
+            }
+
             Debug.Log(
                 "[SpeechOutputManager] Meta TextToSpeechAgent clip ready. Length: " +
                 clip.length.ToString("0.00") + "s, samples: " + clip.samples + ", channels: " + clip.channels,
                 this);
+
+            float[] samples = new float[Mathf.Min(4096, clip.samples * clip.channels)];
+            if (samples.Length > 0 && clip.GetData(samples, Mathf.Max(0, clip.samples / 2 - samples.Length / clip.channels / 2)))
+            {
+                float peak = 0f;
+                foreach (float sample in samples) peak = Mathf.Max(peak, Mathf.Abs(sample));
+                Debug.Log("[SpeechOutputManager] Clip peak: " + peak.ToString("0.000")
+                    + ", listener volume: " + AudioListener.volume.ToString("0.00"), this);
+            }
+            else
+            {
+                Debug.LogWarning("[SpeechOutputManager] Could not read synthesized clip samples.", this);
+            }
+
         }
 
         private void HandleMetaSpeakStarting(string spokenText)
@@ -242,6 +276,13 @@ namespace WorkspaceVoiceAssistant
             fallbackFinishRoutine = null;
             onSpeechFinished.Invoke();
             SpeechFinished?.Invoke();
+        }
+
+        private IEnumerator ReportMetaTimeout()
+        {
+            yield return new WaitForSecondsRealtime(metaSpeechTimeoutSeconds);
+            metaTimeoutRoutine = null;
+            ReportSpeechError("Speech service did not return audio before timeout.");
         }
 
         private bool TryInvokeFallbackSpeak(string text)

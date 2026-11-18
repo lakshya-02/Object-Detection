@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: SpeechToText_ElevenLabs_ProviderProfile
   m_EditorClassIdentifier: 
   supportedInferenceTypes: 1
-  apiKey: sk_ada6ab1978b9bf851d3682876394f4998fec7df92baffed2
+  apiKey: 
   overrideApiKey: 1
-  endpoint: https://api.elevenlabs.io
-  model: eleven_flash_v2_5
+  endpoint: http://localhost:8765
+  model: scribe_v1
   voiceId: 21m00Tcm4TlvDq8ikWAM
   sttLanguage: 
   sttIncludeAudioEvents: 0

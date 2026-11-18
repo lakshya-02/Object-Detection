@@ -8,6 +8,7 @@ namespace WorkspaceVoiceAssistant
     public sealed class DetectedObject
     {
         public string name;
+        public string color = "unknown";
         public string zone;
         public float confidence;
         public string rawLabel;
@@ -24,7 +25,7 @@ namespace WorkspaceVoiceAssistant
     [Serializable]
     public sealed class SceneData
     {
-        public string surface = "desk";
+        public string surface = "unknown";
         public List<DetectedObject> objects = new List<DetectedObject>();
         public List<string> zones = new List<string>();
     }
@@ -46,6 +47,35 @@ namespace WorkspaceVoiceAssistant
             format = "json";
             options = new OllamaGenerateOptions();
         }
+    }
+
+    [Serializable]
+    public sealed class AiGatewayRequest
+    {
+        public string provider;
+        public string model;
+        public string prompt;
+
+        public AiGatewayRequest(string provider, string model, string prompt)
+        {
+            this.provider = provider;
+            this.model = model;
+            this.prompt = prompt;
+        }
+    }
+
+    [Serializable]
+    public sealed class AiPlanAction
+    {
+        public int objectIndex;
+        public string action;
+        public int targetIndex = -1;
+    }
+
+    [Serializable]
+    public sealed class AiPlanResponse
+    {
+        public List<AiPlanAction> actions = new List<AiPlanAction>();
     }
 
     [Serializable]

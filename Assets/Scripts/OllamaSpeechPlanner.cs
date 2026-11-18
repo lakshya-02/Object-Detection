@@ -1,25 +1,24 @@
 using System;
 using System.Collections;
-using System.Reflection;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Serialization;
 
 namespace WorkspaceVoiceAssistant
 {
     /// <summary>
-    /// Handles the Ollama HTTP request/response cycle and emits structured recommendations.
+    /// Sends grounded voice questions through the PC gateway and emits recommendations.
     /// </summary>
     public sealed class OllamaSpeechPlanner : MonoBehaviour
     {
-        private const string DefaultEndpoint = "http://localhost:11434/api/generate";
-        private const string GeneratePath = "/api/generate";
-        private const string DefaultModelName = "llama3.2";
+        private const string DefaultEndpoint = "http://localhost:8765/api/answer";
+        private const string DefaultModelName = "gemini-3.5-flash-lite";
 
-        [Header("Ollama")]
-        [Tooltip("Optional provider/profile asset. If assigned, host/model/prompt are read from it when possible.")]
-        [SerializeField] private ScriptableObject providerAsset;
-        [SerializeField] private string ollamaEndpoint = DefaultEndpoint;
+        [Header("AI Gateway")]
+        [SerializeField] private string providerName = "google";
+        [FormerlySerializedAs("ollamaEndpoint")]
+        [SerializeField] private string gatewayEndpoint = DefaultEndpoint;
         [SerializeField] private string modelName = DefaultModelName;
         [SerializeField, Min(1)] private int requestTimeoutSeconds = 45;
 
@@ -49,7 +48,6 @@ namespace WorkspaceVoiceAssistant
         public void RequestRecommendation(string sceneJson, string userTranscript)
         {
             ResolveReferences();
-            ApplyProviderAssetSettings();
 
             if (sceneContextBuilder == null)
             {
@@ -57,30 +55,35 @@ namespace WorkspaceVoiceAssistant
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(ollamaEndpoint))
+            if (!string.IsNullOrWhiteSpace(gatewayEndpoint))
             {
-                ollamaEndpoint = ollamaEndpoint.Trim();
+                gatewayEndpoint = gatewayEndpoint.Trim();
             }
 
-            if (string.IsNullOrWhiteSpace(ollamaEndpoint))
+            if (string.IsNullOrWhiteSpace(gatewayEndpoint))
             {
-                ReportFailure("Ollama endpoint is empty.");
+                ReportFailure("AI gateway endpoint is empty.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(modelName))
             {
-                ReportFailure("Ollama model name is empty.");
+                ReportFailure("AI model name is empty.");
+                return;
+            }
+
+            if (providerName != "google" && providerName != "openrouter" && providerName != "grok")
+            {
+                ReportFailure("AI provider must be google, openrouter, or grok.");
                 return;
             }
 
             if (Application.platform == RuntimePlatform.Android
                 && !Application.isEditor
-                && ollamaEndpoint.Contains("localhost", StringComparison.OrdinalIgnoreCase))
+                && gatewayEndpoint.Contains("localhost", StringComparison.OrdinalIgnoreCase))
             {
                 Debug.LogWarning(
-                    "[OllamaSpeechPlanner] localhost on Quest points to the headset itself. " +
-                    "If Ollama runs on your PC, override the endpoint with your LAN IP in the Inspector.",
+                    "[OllamaSpeechPlanner] localhost on Quest points to the headset. Set the gateway endpoint to your PC LAN IP.",
                     this);
             }
 
@@ -89,10 +92,16 @@ namespace WorkspaceVoiceAssistant
                 StopCoroutine(activeRequest);
             }
 
+            if (!TryParseJson(sceneJson, out SceneData scene, out _) || scene.objects == null || scene.objects.Count == 0)
+            {
+                ReportFailure("No current detections are available for AI advice.");
+                return;
+            }
+
             string prompt = sceneContextBuilder.BuildPrompt(sceneJson, userTranscript);
-            onRequestStarted.Invoke("Sending request to Ollama...");
-            RequestStarted?.Invoke("Sending request to Ollama...");
-            activeRequest = StartCoroutine(SendGenerateRequest(prompt));
+            onRequestStarted.Invoke("Sending request to AI gateway...");
+            RequestStarted?.Invoke("Sending request to AI gateway...");
+            activeRequest = StartCoroutine(SendGenerateRequest(prompt, scene));
         }
 
         public void CancelActiveRequest()
@@ -106,12 +115,12 @@ namespace WorkspaceVoiceAssistant
             activeRequest = null;
         }
 
-        private IEnumerator SendGenerateRequest(string prompt)
+        private IEnumerator SendGenerateRequest(string prompt, SceneData scene)
         {
-            OllamaGenerateRequest payload = new OllamaGenerateRequest(modelName, prompt);
+            AiGatewayRequest payload = new AiGatewayRequest(providerName, modelName, prompt);
             string requestJson = JsonUtility.ToJson(payload);
 
-            using UnityWebRequest request = new UnityWebRequest(ollamaEndpoint, UnityWebRequest.kHttpVerbPOST);
+            using UnityWebRequest request = new UnityWebRequest(gatewayEndpoint, UnityWebRequest.kHttpVerbPOST);
             byte[] bodyRaw = Encoding.UTF8.GetBytes(requestJson);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -127,56 +136,56 @@ namespace WorkspaceVoiceAssistant
 
                 if (IsTimeoutError(networkError))
                 {
-                    ReportFailure("Ollama request timed out after " + requestTimeoutSeconds + " seconds.");
+                    ReportFailure("AI request timed out after " + requestTimeoutSeconds + " seconds.");
                     yield break;
                 }
 
                 if (IsLikelyConnectionRefused(networkError))
                 {
-                    ReportFailure("Could not reach Ollama at " + ollamaEndpoint + ". Check that the Ollama server is running and reachable.");
+                    ReportFailure("Could not reach AI gateway at " + gatewayEndpoint + ". Check the PC service and network.");
                     yield break;
                 }
 
-                ReportFailure("Ollama request failed: " + networkError);
+                ReportFailure("AI request failed: " + networkError);
                 yield break;
             }
 
             string rawEnvelope = request.downloadHandler != null ? request.downloadHandler.text : string.Empty;
             if (string.IsNullOrWhiteSpace(rawEnvelope))
             {
-                ReportFailure("Ollama returned an empty HTTP response.");
+                ReportFailure("AI gateway returned an empty HTTP response.");
                 yield break;
             }
 
             if (!TryParseJson(rawEnvelope, out OllamaGenerateResponse envelope, out string envelopeError))
             {
-                ReportFailure("Could not parse Ollama response envelope: " + envelopeError);
+                ReportFailure("Could not parse AI gateway response: " + envelopeError);
                 yield break;
             }
 
             if (!string.IsNullOrWhiteSpace(envelope.error))
             {
-                ReportFailure("Ollama returned an error: " + envelope.error);
+                ReportFailure("AI gateway returned an error: " + envelope.error);
                 yield break;
             }
 
             if (string.IsNullOrWhiteSpace(envelope.response))
             {
-                ReportFailure("Ollama returned an empty model response.");
+                ReportFailure("AI gateway returned an empty model response.");
                 yield break;
             }
 
             string recommendationJson = ExtractJsonObject(envelope.response);
-            if (!TryParseJson(recommendationJson, out Recommendation recommendation, out string recommendationError))
+            if (!TryParseJson(recommendationJson, out AiPlanResponse plan, out string recommendationError))
             {
-                ReportFailure("Model output was not valid recommendation JSON: " + recommendationError);
+                ReportFailure("Model output was not valid action JSON: " + recommendationError);
                 yield break;
             }
 
-            if (!ValidateRecommendation(recommendation, out string validationError))
+            if (!sceneContextBuilder.TryBuildAdvice(scene, plan, out Recommendation recommendation))
             {
-                ReportFailure(validationError);
-                yield break;
+                Debug.LogWarning("[OllamaSpeechPlanner] AI returned no supported placement action.", this);
+                recommendation = sceneContextBuilder.BuildUnavailableAdvice();
             }
 
             onRecommendationReceived.Invoke(recommendation);
@@ -194,60 +203,6 @@ namespace WorkspaceVoiceAssistant
             {
                 sceneContextBuilder = FindAnyObjectByType<SceneContextBuilder>();
             }
-        }
-
-        private void ApplyProviderAssetSettings()
-        {
-            if (providerAsset == null)
-            {
-                return;
-            }
-
-            string providerHost = ReadStringMember(providerAsset, "host", "baseUrl", "baseURL", "endpoint", "ollamaEndpoint");
-            if (!string.IsNullOrWhiteSpace(providerHost))
-            {
-                ollamaEndpoint = BuildGenerateEndpoint(providerHost);
-            }
-
-            string providerModel = ReadStringMember(providerAsset, "model", "modelName");
-            if (!string.IsNullOrWhiteSpace(providerModel))
-            {
-                modelName = providerModel.Trim();
-            }
-        }
-
-        private static string BuildGenerateEndpoint(string providerHost)
-        {
-            string trimmed = providerHost.Trim().TrimEnd('/');
-            if (trimmed.EndsWith(GeneratePath, StringComparison.OrdinalIgnoreCase))
-            {
-                return trimmed;
-            }
-
-            return trimmed + GeneratePath;
-        }
-
-        private static string ReadStringMember(UnityEngine.Object source, params string[] memberNames)
-        {
-            Type type = source.GetType();
-            const BindingFlags Flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
-            for (int i = 0; i < memberNames.Length; i++)
-            {
-                FieldInfo field = type.GetField(memberNames[i], Flags);
-                if (field != null && field.FieldType == typeof(string))
-                {
-                    return field.GetValue(source) as string;
-                }
-
-                PropertyInfo property = type.GetProperty(memberNames[i], Flags);
-                if (property != null && property.PropertyType == typeof(string) && property.GetIndexParameters().Length == 0)
-                {
-                    return property.GetValue(source, null) as string;
-                }
-            }
-
-            return null;
         }
 
         private static bool TryParseJson<T>(string rawJson, out T parsedObject, out string errorMessage)
@@ -307,45 +262,6 @@ namespace WorkspaceVoiceAssistant
             }
 
             return trimmed;
-        }
-
-        private static bool ValidateRecommendation(Recommendation recommendation, out string error)
-        {
-            if (recommendation == null)
-            {
-                error = "Recommendation payload was null.";
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(recommendation.summary))
-            {
-                error = "Recommendation is missing the required summary field.";
-                return false;
-            }
-
-            if (recommendation.steps == null || recommendation.steps.Count == 0)
-            {
-                error = "Recommendation is missing the required steps array.";
-                return false;
-            }
-
-            for (int i = 0; i < recommendation.steps.Count; i++)
-            {
-                if (string.IsNullOrWhiteSpace(recommendation.steps[i]))
-                {
-                    error = "Recommendation contains an empty step at index " + i + ".";
-                    return false;
-                }
-            }
-
-            if (string.IsNullOrWhiteSpace(recommendation.speak))
-            {
-                error = "Recommendation is missing the required speak field.";
-                return false;
-            }
-
-            error = null;
-            return true;
         }
 
         private void ReportFailure(string message)

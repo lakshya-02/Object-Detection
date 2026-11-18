@@ -12,6 +12,11 @@ public class RecommendationTextOutput : MonoBehaviour
     [SerializeField] private bool showFullOllamaResponse = true;
 
     private string latestRecommendationText = string.Empty;
+    private string latestStatus = "Ready";
+    private string microphoneStatus = "Ready";
+    private string detectionStatus = "Waiting";
+    private string aiStatus = "Ready";
+    private string connectionStatus = "Not checked";
 
     private void Awake()
     {
@@ -89,8 +94,7 @@ public class RecommendationTextOutput : MonoBehaviour
             return;
         }
 
-        outputText.text = BuildInstructionText(recommendation);
-        latestRecommendationText = outputText.text;
+        ShowAnswer(BuildInstructionText(recommendation));
     }
 
     public void ShowRecommendation(Recommendation recommendation)
@@ -100,8 +104,7 @@ public class RecommendationTextOutput : MonoBehaviour
             return;
         }
 
-        outputText.text = BuildInstructionText(recommendation);
-        latestRecommendationText = outputText.text;
+        ShowAnswer(BuildInstructionText(recommendation));
     }
 
     public void ShowError(string error)
@@ -111,8 +114,15 @@ public class RecommendationTextOutput : MonoBehaviour
             return;
         }
 
-        outputText.text = "LLM Error:\n" + error;
-        latestRecommendationText = string.Empty;
+        error ??= "Unknown error";
+        aiStatus = "Error";
+        if (error.Contains("gateway", System.StringComparison.OrdinalIgnoreCase)
+            || error.Contains("AI request", System.StringComparison.OrdinalIgnoreCase))
+        {
+            connectionStatus = "Unavailable";
+        }
+        latestRecommendationText = "Error: " + error;
+        Render();
     }
 
     public void ShowStatus(string status)
@@ -122,15 +132,46 @@ public class RecommendationTextOutput : MonoBehaviour
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(latestRecommendationText)
-            && !string.IsNullOrWhiteSpace(status)
-            && status.Contains("Speaking", System.StringComparison.OrdinalIgnoreCase))
+        status ??= string.Empty;
+        latestStatus = status;
+        if (status.Contains("Listening", System.StringComparison.OrdinalIgnoreCase))
         {
-            outputText.text = latestRecommendationText + "\n\nStatus: " + status;
-            return;
+            microphoneStatus = "Listening";
+        }
+        else if (status.Contains("Detecting", System.StringComparison.OrdinalIgnoreCase))
+        {
+            microphoneStatus = "Ready";
+            detectionStatus = "Scanning";
+            latestRecommendationText = string.Empty;
+        }
+        else if (status.Contains("Sending request to AI", System.StringComparison.OrdinalIgnoreCase))
+        {
+            detectionStatus = "Ready";
+            aiStatus = "Waiting";
+            connectionStatus = "Checking";
+        }
+        else if (status.Contains("Speaking", System.StringComparison.OrdinalIgnoreCase))
+        {
+            aiStatus = "Ready";
         }
 
-        outputText.text = status;
+        Render();
+    }
+
+    private void ShowAnswer(string answer)
+    {
+        detectionStatus = "Ready";
+        aiStatus = "Ready";
+        connectionStatus = connectionStatus == "Checking" ? "Connected" : "Local answer";
+        latestRecommendationText = answer;
+        Render();
+    }
+
+    private void Render()
+    {
+        outputText.text = "Mic: " + microphoneStatus + "   Detection: " + detectionStatus
+            + "\nAI: " + aiStatus + "   Connection: " + connectionStatus
+            + "\n\n" + (string.IsNullOrWhiteSpace(latestRecommendationText) ? latestStatus : latestRecommendationText);
     }
 
     private void ApplyTextSettings()
@@ -141,6 +182,7 @@ public class RecommendationTextOutput : MonoBehaviour
         }
 
         outputText.fontSize = outputFontSize;
+        outputText.alignment = TextAlignmentOptions.TopLeft;
         outputText.textWrappingMode = TextWrappingModes.Normal;
         outputText.overflowMode = TextOverflowModes.Ellipsis;
     }
@@ -158,10 +200,9 @@ public class RecommendationTextOutput : MonoBehaviour
             return string.Join("\n", recommendation.steps, 0, shortCount);
         }
 
-        int count = Mathf.Min(maxDisplayedSteps, recommendation.steps.Length);
         string steps = recommendation.steps == null || recommendation.steps.Length == 0
             ? "(no steps)"
-            : string.Join("\n", recommendation.steps, 0, count);
+            : string.Join("\n", recommendation.steps, 0, Mathf.Min(maxDisplayedSteps, recommendation.steps.Length));
 
         return "Ollama Response\n"
             + "Summary: " + SafeText(recommendation.summary) + "\n"
@@ -182,10 +223,9 @@ public class RecommendationTextOutput : MonoBehaviour
             return string.Join("\n", recommendation.steps.GetRange(0, shortCount));
         }
 
-        int count = Mathf.Min(maxDisplayedSteps, recommendation.steps.Count);
         string steps = recommendation.steps == null || recommendation.steps.Count == 0
             ? "(no steps)"
-            : string.Join("\n", recommendation.steps.GetRange(0, count));
+            : string.Join("\n", recommendation.steps.GetRange(0, Mathf.Min(maxDisplayedSteps, recommendation.steps.Count)));
 
         return "Ollama Response\n"
             + "Summary: " + SafeText(recommendation.summary) + "\n"
