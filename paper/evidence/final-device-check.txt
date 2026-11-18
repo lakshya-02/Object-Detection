@@ -1,0 +1,12 @@
+Final Quest 3 functional check — 18 Nov 2026
+
+APK: Builds/ObjectDetection-Quest-final.apk
+SHA-256: 51A60A1AA00E093CB3B4DFE72640CFA10EE0676C333003F2A801013EEE8425D8
+Unity batch build: succeeded.
+Unity Edit Mode rerun: 36 passed, 0 failed (final-editmode-results.xml).
+metavr: APK installation succeeded; cold launch reported no crash signal.
+PC gateway: health HTTP 200; Google and ElevenLabs credential checks HTTP 200.
+Gateway log: successful ElevenLabs text-to-speech requests from the device over USB reverse.
+User wearing Quest 3: reported live detection labels and text, with spoken replies for both left Y inventory and left X spoken question.
+
+This is an informal integration check. No ground-truth detection accuracy, device FPS, power, or latency measurements were recorded. A headset screenshot attempt returned a black image and is not used as visual evidence.

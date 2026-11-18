@@ -78,7 +78,7 @@ Fig.~\ref{fig:flow} shows the request flow. Pressing X begins speech recognition
 \subsection{Experimental Setup}
 The prototype uses Unity 6 (6000.3.19f1), Meta XR SDK 85.0.0, Sentis 2.6.1, Quest 3, and a Python gateway. The configured Google path is a Gemini model; speech profiles use ElevenLabs Scribe v1 and Flash v2.5. No detector training, fine tuning, dataset partition, or train/test split was performed in this repository. Offline inputs were a synthetic 640$\times$640 gray texture for an inference smoke test and constructed object/100$\times$100 color scenes for logic tests. Metrics reported here are test pass counts, test fixture wall time, and artifact size. These are software verification measures, not COCO mAP or device inference latency. No controlled detector baseline or ablation experiment was run. The accompanying code ZIP contains the Unity project source, tests, and PC gateway used for these checks.
 
-Table~\ref{tab:tests} and Figs.~\ref{fig:counts}--\ref{fig:times} summarize the saved Unity Test Framework XML. The full Edit Mode run passed 36/36 cases; the 23.38~s model smoke case includes Editor test overhead and must not be read as per frame latency.
+Table~\ref{tab:tests} and Figs.~\ref{fig:counts}--\ref{fig:times} summarize the archived Unity Test Framework XML. That Edit Mode run passed 36/36 cases; the 23.38~s model smoke case includes Editor test overhead and must not be read as per frame latency. A final Edit Mode run on November 18 also passed 36/36 cases; its XML is supplied separately.
 \begin{table}[t]
 \caption{Unity Edit Mode results from saved test XML}
 \label{tab:tests}\centering\footnotesize
@@ -118,7 +118,7 @@ Invalid action index & Placement & Declines plan \\ \bottomrule
 \end{tabularx}
 \end{table}
 
-Table~\ref{tab:gateway} summarizes six Python gateway tests using mocked upstream responses and substitute credentials. Prior manual Quest 3 checks showed live labels, spoken Y inventory, and spoken X count answers for a visible TV class. Those observations establish basic integration only; they were not recorded as a timed, randomized trial. The latest offline APK has not yet been checked on the headset.
+Table~\ref{tab:gateway} summarizes six Python gateway tests using mocked upstream responses and substitute credentials. Prior manual Quest 3 checks showed live labels, spoken Y inventory, and spoken X count answers for a visible TV class. On November 18, the final APK was installed and launched without a reported crash; a user wearing Quest 3 confirmed live labels, text, and spoken replies from both X and Y. The gateway recorded successful text to speech requests. These are informal functional observations, not a timed or randomized accuracy trial.
 \begin{table}[t]
 \caption{PC gateway verification, mocked cloud upstream}
 \label{tab:gateway}\centering\footnotesize

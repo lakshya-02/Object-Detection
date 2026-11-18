@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="36" result="Passed" total="36" passed="36" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-18 13:44:50Z" end-time="2026-11-18 13:44:54Z" duration="4.0645598">
+  <test-suite type="TestSuite" id="1000" name="Object Detection" fullname="Object Detection" runstate="Runnable" testcasecount="36" result="Passed" start-time="2026-11-18 13:44:50Z" end-time="2026-11-18 13:44:54Z" duration="4.064560" total="36" passed="36" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1047" name="Assembly-CSharp-Editor.dll" fullname="C:/Users/Lakshya/Downloads/Object-Detection-main/Object-Detection-main/Library/ScriptAssemblies/Assembly-CSharp-Editor.dll" runstate="Runnable" testcasecount="36" result="Passed" start-time="2026-11-18 13:44:50Z" end-time="2026-11-18 13:44:54Z" duration="4.058535" total="36" passed="36" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="32232" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestFixture" id="1001" name="GatewayRequestTests" fullname="GatewayRequestTests" classname="GatewayRequestTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-18 13:44:50Z" end-time="2026-11-18 13:44:50Z" duration="0.019518" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1002" name="RequestCarriesProviderModelAndPrompt" fullname="GatewayRequestTests.RequestCarriesProviderModelAndPrompt" methodname="RequestCarriesProviderModelAndPrompt" classname="GatewayRequestTests" runstate="Runnable" seed="648744804" result="Passed" start-time="2026-11-18 13:44:50Z" end-time="2026-11-18 13:44:50Z" duration="0.008192" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1003" name="ModelInferenceSmokeTests" fullname="ModelInferenceSmokeTests" classname="ModelInferenceSmokeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-18 13:44:50Z" end-time="2026-11-18 13:44:54Z" duration="3.630753" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1004" name="BundledModelRunsOnAnEditorTexture" fullname="ModelInferenceSmokeTests.BundledModelRunsOnAnEditorTexture" methodname="BundledModelRunsOnAnEditorTexture" classname="ModelInferenceSmokeTests" runstate="Runnable" seed="1389993905" result="Passed" start-time="2026-11-18 13:44:50Z" end-time="2026-11-18 13:44:54Z" duration="3.629516" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Timeout" value="180000" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1005" name="RecommendationTextOutputTests" fullname="RecommendationTextOutputTests" classname="RecommendationTextOutputTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.023107" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1006" name="DetectionStatusShowsAllFourIndicators" fullname="RecommendationTextOutputTests.DetectionStatusShowsAllFourIndicators" methodname="DetectionStatusShowsAllFourIndicators" classname="RecommendationTextOutputTests" runstate="Runnable" seed="1819245085" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.022509" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1007" name="SceneContextBuilderTests" fullname="SceneContextBuilderTests" classname="SceneContextBuilderTests" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.025643" total="32" passed="32" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1037" name="AdviceRejectsUnknownDetectionIndex" fullname="SceneContextBuilderTests.AdviceRejectsUnknownDetectionIndex" methodname="AdviceRejectsUnknownDetectionIndex" classname="SceneContextBuilderTests" runstate="Runnable" seed="4616070" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.003019" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1036" name="AdviceUsesOnlyReferencedDetections" fullname="SceneContextBuilderTests.AdviceUsesOnlyReferencedDetections" methodname="AdviceUsesOnlyReferencedDetections" classname="SceneContextBuilderTests" runstate="Runnable" seed="1093529812" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000755" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1008" name="BoxDimensionsAreComputedFromPixelCorners" fullname="SceneContextBuilderTests.BoxDimensionsAreComputedFromPixelCorners" methodname="BoxDimensionsAreComputedFromPixelCorners" classname="SceneContextBuilderTests" runstate="Runnable" seed="1665088936" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.002012" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-suite type="ParameterizedMethod" id="1043" name="ColorQuestionsUseDetectedClass" fullname="SceneContextBuilderTests.ColorQuestionsUseDetectedClass" classname="SceneContextBuilderTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.003704" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-case id="1039" name="ColorQuestionsUseDetectedClass(&quot;bottle&quot;,&quot;What color is the bottle?&quot;,&quot;The detected bottle is blue.&quot;)" fullname="SceneContextBuilderTests.ColorQuestionsUseDetectedClass(&quot;bottle&quot;,&quot;What color is the bottle?&quot;,&quot;The detected bottle is blue.&quot;)" methodname="ColorQuestionsUseDetectedClass" classname="SceneContextBuilderTests" runstate="Runnable" seed="1748289777" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.002510" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1040" name="ColorQuestionsUseDetectedClass(&quot;backpack&quot;,&quot;What is the color of my backpack?&quot;,&quot;The detected backpack is blue.&quot;)" fullname="SceneContextBuilderTests.ColorQuestionsUseDetectedClass(&quot;backpack&quot;,&quot;What is the color of my backpack?&quot;,&quot;The detected backpack is blue.&quot;)" methodname="ColorQuestionsUseDetectedClass" classname="SceneContextBuilderTests" runstate="Runnable" seed="747510401" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000112" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1041" name="ColorQuestionsUseDetectedClass(&quot;chair&quot;,&quot;What color are the chairs?&quot;,&quot;The detected chair is blue.&quot;)" fullname="SceneContextBuilderTests.ColorQuestionsUseDetectedClass(&quot;chair&quot;,&quot;What color are the chairs?&quot;,&quot;The detected chair is blue.&quot;)" methodname="ColorQuestionsUseDetectedClass" classname="SceneContextBuilderTests" runstate="Runnable" seed="72322819" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000102" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1042" name="ColorQuestionsUseDetectedClass(&quot;chair&quot;,&quot;Which color of the chair is in front of me?&quot;,&quot;The detected chair is blue.&quot;)" fullname="SceneContextBuilderTests.ColorQuestionsUseDetectedClass(&quot;chair&quot;,&quot;Which color of the chair is in front of me?&quot;,&quot;The detected chair is blue.&quot;)" methodname="ColorQuestionsUseDetectedClass" classname="SceneContextBuilderTests" runstate="Runnable" seed="427512427" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000086" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+        </test-suite>
+        <test-suite type="ParameterizedMethod" id="1022" name="CountQuestionReportsEachRequestedClass" fullname="SceneContextBuilderTests.CountQuestionReportsEachRequestedClass" classname="SceneContextBuilderTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.001414" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-case id="1019" name="CountQuestionReportsEachRequestedClass(&quot;How many laptops or TV monitors you can tell there are right now?&quot;,&quot;laptop&quot;,&quot;tv monitor&quot;,True,&quot;Current detections show 1 laptop and 1 tv monitor.&quot;)" fullname="SceneContextBuilderTests.CountQuestionReportsEachRequestedClass(&quot;How many laptops or TV monitors you can tell there are right now?&quot;,&quot;laptop&quot;,&quot;tv monitor&quot;,True,&quot;Current detections show 1 laptop and 1 tv monitor.&quot;)" methodname="CountQuestionReportsEachRequestedClass" classname="SceneContextBuilderTests" runstate="Runnable" seed="282257339" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000452" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1020" name="CountQuestionReportsEachRequestedClass(&quot;How many laptops or TV can you see?&quot;,&quot;laptop&quot;,&quot;tv monitor&quot;,True,&quot;Current detections show 1 laptop and 1 tv monitor.&quot;)" fullname="SceneContextBuilderTests.CountQuestionReportsEachRequestedClass(&quot;How many laptops or TV can you see?&quot;,&quot;laptop&quot;,&quot;tv monitor&quot;,True,&quot;Current detections show 1 laptop and 1 tv monitor.&quot;)" methodname="CountQuestionReportsEachRequestedClass" classname="SceneContextBuilderTests" runstate="Runnable" seed="2131154670" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000109" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1021" name="CountQuestionReportsEachRequestedClass(&quot;How many books and bottles can you see?&quot;,&quot;book&quot;,&quot;bottle&quot;,False,&quot;Current detections show 1 book and 0 bottles.&quot;)" fullname="SceneContextBuilderTests.CountQuestionReportsEachRequestedClass(&quot;How many books and bottles can you see?&quot;,&quot;book&quot;,&quot;bottle&quot;,False,&quot;Current detections show 1 book and 0 bottles.&quot;)" methodname="CountQuestionReportsEachRequestedClass" classname="SceneContextBuilderTests" runstate="Runnable" seed="834500261" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000090" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+        </test-suite>
+        <test-suite type="ParameterizedMethod" id="1018" name="CountQuestionUsesObjectClassAcrossPhrasings" fullname="SceneContextBuilderTests.CountQuestionUsesObjectClassAcrossPhrasings" classname="SceneContextBuilderTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.001797" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-case id="1011" name="CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many chairs in front of me?&quot;,&quot;chair&quot;,&quot;I can see 2 chairs.&quot;)" fullname="SceneContextBuilderTests.CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many chairs in front of me?&quot;,&quot;chair&quot;,&quot;I can see 2 chairs.&quot;)" methodname="CountQuestionUsesObjectClassAcrossPhrasings" classname="SceneContextBuilderTests" runstate="Runnable" seed="1766330130" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000345" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1012" name="CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many bottles on the table?&quot;,&quot;bottle&quot;,&quot;I can see 2 bottles.&quot;)" fullname="SceneContextBuilderTests.CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many bottles on the table?&quot;,&quot;bottle&quot;,&quot;I can see 2 bottles.&quot;)" methodname="CountQuestionUsesObjectClassAcrossPhrasings" classname="SceneContextBuilderTests" runstate="Runnable" seed="2088453308" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000105" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1013" name="CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many books are there?&quot;,&quot;book&quot;,&quot;I can see 2 books.&quot;)" fullname="SceneContextBuilderTests.CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many books are there?&quot;,&quot;book&quot;,&quot;I can see 2 books.&quot;)" methodname="CountQuestionUsesObjectClassAcrossPhrasings" classname="SceneContextBuilderTests" runstate="Runnable" seed="1798429804" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000090" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1014" name="CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many people are there?&quot;,&quot;person&quot;,&quot;I can see 2 people.&quot;)" fullname="SceneContextBuilderTests.CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many people are there?&quot;,&quot;person&quot;,&quot;I can see 2 people.&quot;)" methodname="CountQuestionUsesObjectClassAcrossPhrasings" classname="SceneContextBuilderTests" runstate="Runnable" seed="746412612" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000089" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1015" name="CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many buses are there?&quot;,&quot;bus&quot;,&quot;I can see 2 buses.&quot;)" fullname="SceneContextBuilderTests.CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many buses are there?&quot;,&quot;bus&quot;,&quot;I can see 2 buses.&quot;)" methodname="CountQuestionUsesObjectClassAcrossPhrasings" classname="SceneContextBuilderTests" runstate="Runnable" seed="963485564" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000091" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1016" name="CountQuestionUsesObjectClassAcrossPhrasings(&quot;Now how many person did you, uh, getting observed?&quot;,&quot;person&quot;,&quot;I can see 2 people.&quot;)" fullname="SceneContextBuilderTests.CountQuestionUsesObjectClassAcrossPhrasings(&quot;Now how many person did you, uh, getting observed?&quot;,&quot;person&quot;,&quot;I can see 2 people.&quot;)" methodname="CountQuestionUsesObjectClassAcrossPhrasings" classname="SceneContextBuilderTests" runstate="Runnable" seed="248178837" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000087" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1017" name="CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many laptops did you observe?&quot;,&quot;laptop&quot;,&quot;I can see 2 laptops.&quot;)" fullname="SceneContextBuilderTests.CountQuestionUsesObjectClassAcrossPhrasings(&quot;How many laptops did you observe?&quot;,&quot;laptop&quot;,&quot;I can see 2 laptops.&quot;)" methodname="CountQuestionUsesObjectClassAcrossPhrasings" classname="SceneContextBuilderTests" runstate="Runnable" seed="1367111927" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000084" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+        </test-suite>
+        <test-case id="1010" name="CountsCurrentDetectionsInsteadOfAskingTheModel" fullname="SceneContextBuilderTests.CountsCurrentDetectionsInsteadOfAskingTheModel" methodname="CountsCurrentDetectionsInsteadOfAskingTheModel" classname="SceneContextBuilderTests" runstate="Runnable" seed="1242709801" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000314" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1031" name="DemonstrativeDoesNotHideDetectedObjectColor" fullname="SceneContextBuilderTests.DemonstrativeDoesNotHideDetectedObjectColor" methodname="DemonstrativeDoesNotHideDetectedObjectColor" classname="SceneContextBuilderTests" runstate="Runnable" seed="1138218884" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000286" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1033" name="DistinguishesTwoChairsBySupportedCameraColors" fullname="SceneContextBuilderTests.DistinguishesTwoChairsBySupportedCameraColors" methodname="DistinguishesTwoChairsBySupportedCameraColors" classname="SceneContextBuilderTests" runstate="Runnable" seed="1784037449" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.002271" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1034" name="MissingObjectIsNeverClaimedVisible" fullname="SceneContextBuilderTests.MissingObjectIsNeverClaimedVisible" methodname="MissingObjectIsNeverClaimedVisible" classname="SceneContextBuilderTests" runstate="Runnable" seed="230276661" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000321" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1044" name="MultipleDetectedObjectsKeepSeparateColorsAndLocations" fullname="SceneContextBuilderTests.MultipleDetectedObjectsKeepSeparateColorsAndLocations" methodname="MultipleDetectedObjectsKeepSeparateColorsAndLocations" classname="SceneContextBuilderTests" runstate="Runnable" seed="1247608659" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000368" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1009" name="PixelBoundsUseImageDimensionsForScreenZone" fullname="SceneContextBuilderTests.PixelBoundsUseImageDimensionsForScreenZone" methodname="PixelBoundsUseImageDimensionsForScreenZone" classname="SceneContextBuilderTests" runstate="Runnable" seed="1072638727" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000342" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1035" name="PromptDoesNotForceOrganizationStepsForQuestions" fullname="SceneContextBuilderTests.PromptDoesNotForceOrganizationStepsForQuestions" methodname="PromptDoesNotForceOrganizationStepsForQuestions" classname="SceneContextBuilderTests" runstate="Runnable" seed="983178147" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000538" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-suite type="ParameterizedMethod" id="1029" name="SingularObjectQuestionListsCurrentDetection" fullname="SceneContextBuilderTests.SingularObjectQuestionListsCurrentDetection" classname="SceneContextBuilderTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.002704" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-case id="1026" name="SingularObjectQuestionListsCurrentDetection(&quot;laptop&quot;)" fullname="SceneContextBuilderTests.SingularObjectQuestionListsCurrentDetection(&quot;laptop&quot;)" methodname="SingularObjectQuestionListsCurrentDetection" classname="SceneContextBuilderTests" runstate="Runnable" seed="1963444430" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.001851" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1027" name="SingularObjectQuestionListsCurrentDetection(&quot;bottle&quot;)" fullname="SceneContextBuilderTests.SingularObjectQuestionListsCurrentDetection(&quot;bottle&quot;)" methodname="SingularObjectQuestionListsCurrentDetection" classname="SceneContextBuilderTests" runstate="Runnable" seed="1478994861" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000110" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1028" name="SingularObjectQuestionListsCurrentDetection(&quot;backpack&quot;)" fullname="SceneContextBuilderTests.SingularObjectQuestionListsCurrentDetection(&quot;backpack&quot;)" methodname="SingularObjectQuestionListsCurrentDetection" classname="SceneContextBuilderTests" runstate="Runnable" seed="1832583259" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000093" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+        </test-suite>
+        <test-suite type="ParameterizedMethod" id="1025" name="SpokenInventoryWordingUsesCurrentDetections" fullname="SceneContextBuilderTests.SpokenInventoryWordingUsesCurrentDetections" classname="SceneContextBuilderTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000945" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-case id="1023" name="SpokenInventoryWordingUsesCurrentDetections(&quot;So what are the objects you are currently able to see?&quot;)" fullname="SceneContextBuilderTests.SpokenInventoryWordingUsesCurrentDetections(&quot;So what are the objects you are currently able to see?&quot;)" methodname="SpokenInventoryWordingUsesCurrentDetections" classname="SceneContextBuilderTests" runstate="Runnable" seed="1369237212" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000291" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+          <test-case id="1024" name="SpokenInventoryWordingUsesCurrentDetections(&quot;What are the objects are currently visible?&quot;)" fullname="SceneContextBuilderTests.SpokenInventoryWordingUsesCurrentDetections(&quot;What are the objects are currently visible?&quot;)" methodname="SpokenInventoryWordingUsesCurrentDetections" classname="SceneContextBuilderTests" runstate="Runnable" seed="480134556" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000100" asserts="0">
+            <properties>
+              <property name="retryIteration" value="0" />
+              <property name="repeatIteration" value="0" />
+            </properties>
+          </test-case>
+        </test-suite>
+        <test-case id="1030" name="SpokenLeadInDoesNotChangeTheDetectedObjectAnswer" fullname="SceneContextBuilderTests.SpokenLeadInDoesNotChangeTheDetectedObjectAnswer" methodname="SpokenLeadInDoesNotChangeTheDetectedObjectAnswer" classname="SceneContextBuilderTests" runstate="Runnable" seed="42907806" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000268" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1032" name="SpokenTvCountMatchesDetectorLabel" fullname="SceneContextBuilderTests.SpokenTvCountMatchesDetectorLabel" methodname="SpokenTvCountMatchesDetectorLabel" classname="SceneContextBuilderTests" runstate="Runnable" seed="690393613" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000277" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1038" name="UnsupportedVisualQuestionDoesNotBecomeOrganizationAdvice" fullname="SceneContextBuilderTests.UnsupportedVisualQuestionDoesNotBecomeOrganizationAdvice" methodname="UnsupportedVisualQuestionDoesNotBecomeOrganizationAdvice" classname="SceneContextBuilderTests" runstate="Runnable" seed="969722088" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.000276" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1045" name="SceneWiringTests" fullname="SceneWiringTests" classname="SceneWiringTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.357835" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1046" name="SampleSceneHasConnectedAssistantComponents" fullname="SceneWiringTests.SampleSceneHasConnectedAssistantComponents" methodname="SampleSceneHasConnectedAssistantComponents" classname="SceneWiringTests" runstate="Runnable" seed="1024504382" result="Passed" start-time="2026-11-18 13:44:54Z" end-time="2026-11-18 13:44:54Z" duration="0.357168" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Saving results to: C:/Users/Lakshya/AppData/LocalLow/DefaultCompany/Object Detection\TestResults.xml
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
