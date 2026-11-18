@@ -5,7 +5,7 @@
 \begin{document}
 
 \title{Toward Smart Glasses: A Grounded Voice Interactive Object Assistant Prototyped on Meta Quest 3}
-\author{\IEEEauthorblockN{Lakshya Singh}
+\author{\IEEEauthorblockN{Lakshya Singh, Om Mittal, Darpan Mondal, Atmakuri Yeshwanth, and M. Abdussami}
 \IEEEauthorblockA{Department of Computer Science and Engineering\\SRM University-AP\\Amaravati, India}}
 \maketitle
 
@@ -76,7 +76,7 @@ Fig.~\ref{fig:flow} shows the request flow. Pressing X begins speech recognition
 
 \section{Experimental Setup and Results}
 \subsection{Experimental Setup}
-The prototype uses Unity 6 (6000.3.19f1), Meta XR SDK 85.0.0, Sentis 2.6.1, Quest 3, and a Python gateway. The configured Google path is a Gemini model; speech profiles use ElevenLabs Scribe v1 and Flash v2.5. No detector training, fine tuning, dataset partition, or train/test split was performed in this repository. Offline inputs were a synthetic 640$\times$640 gray texture for an inference smoke test and constructed object/100$\times$100 color scenes for logic tests. Metrics reported here are test pass counts, test fixture wall time, and artifact size. These are software verification measures, not COCO mAP or device inference latency. No controlled detector baseline or ablation experiment was run. The accompanying code ZIP contains the Unity project source, tests, and PC gateway used for these checks.
+The prototype uses Unity 6 (6000.3.19f1), Meta XR SDK 85.0.0, Sentis 2.6.1, Quest 3, and a Python gateway. The configured Google path is a Gemini model; speech profiles use ElevenLabs Scribe v1 and Flash v2.5. No detector training, fine tuning, dataset partition, or train/test split was performed in this repository. Offline inputs were a synthetic 640$\times$640 gray texture for an inference smoke test and constructed object/100$\times$100 color scenes for logic tests. Metrics reported here are test pass counts, test fixture wall time, and artifact size. These are software verification measures, not COCO mAP or device inference latency. No controlled detector baseline or ablation experiment was run. Project source, tests, and the PC gateway are available at \url{https://github.com/lakshya-02/Object-Detection}.
 
 Table~\ref{tab:tests} and Figs.~\ref{fig:counts}--\ref{fig:times} summarize the archived Unity Test Framework XML. That Edit Mode run passed 36/36 cases; the 23.38~s model smoke case includes Editor test overhead and must not be read as per frame latency. A final Edit Mode run on November 18 also passed 36/36 cases; its XML is supplied separately.
 \begin{table}[t]

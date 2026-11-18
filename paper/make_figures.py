@@ -142,6 +142,6 @@ bars("test_times", "Test fixture duration (not device latency)",
       ("Other fixtures", round(sum(t for n, _, t in fixtures if n != "ModelInferenceSmokeTests"), 2))],
      24, " s")
 model_mb = (ROOT.parent / "Assets" / "MetaXR" / "yolo12nNoNMS.sentis").stat().st_size / 1_000_000
-apk_mb = (ROOT.parent / "Builds" / "ObjectDetection-Quest-offline-fix.apk").stat().st_size / 1_000_000
+apk_mb = 98_578_068 / 1_000_000  # Measured final APK size in evidence/final-device-check.txt.
 bars("artifact_sizes", "Artifact size (decimal MB)",
      [("Sentis model", round(model_mb, 2)), ("Quest APK", round(apk_mb, 2))], 100, " MB")

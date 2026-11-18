@@ -1,6 +1,7 @@
 Final Quest 3 functional check — 18 Nov 2026
 
 APK: Builds/ObjectDetection-Quest-final.apk
+APK size: 98,578,068 bytes
 SHA-256: 51A60A1AA00E093CB3B4DFE72640CFA10EE0676C333003F2A801013EEE8425D8
 Unity batch build: succeeded.
 Unity Edit Mode rerun: 36 passed, 0 failed (final-editmode-results.xml).

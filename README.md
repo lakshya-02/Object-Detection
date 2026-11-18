@@ -38,4 +38,4 @@ Replace `<Unity>` with the Unity Editor executable path. Run Edit Mode tests wit
 
 ## Security
 
-The gateway reads keys from its PC environment. Keep the repository private or grant reviewers access for assessment. Rotate any credentials that were previously stored in Unity profile assets; removing a key from the current version does not remove it from Git history.
+The gateway reads keys from its PC environment. The public repository contains no current gateway keys. An older ElevenLabs key was previously stored in a Unity profile and remains in Git history; revoke it in the ElevenLabs dashboard. Removing a key from the current version does not remove it from Git history.
